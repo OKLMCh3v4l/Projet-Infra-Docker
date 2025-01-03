@@ -20,3 +20,9 @@ docker run -itd -p 3002:3002 order-backend-prod
 
 docker build --target prod -t product-backend-prod .
 docker run -itd -p 3000:3000 product-backend-prod
+
+
+#docker compose
+
+docker-compose up -d
+docker-compose down

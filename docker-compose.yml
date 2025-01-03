@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  product-backend:
+    image: product-backend-prod:latest
+    container_name: product-backend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+  auth-backend:
+    image: auth-backend-prod:latest
+    container_name: auth-backend
+    ports:
+      - "3001:3001"
+    networks:
+      - app-network
+
+  order-backend:
+    image: order-backend-prod:latest
+    container_name: order-backend
+    ports:
+      - "3002:3002"
+    networks:
+      - app-network
+
+  vue-frontend:
+    image: vue-frontend-prod:latest
+    container_name: vue-frontend
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:4.4
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=test
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
