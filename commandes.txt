@@ -26,3 +26,87 @@ docker run -itd -p 3000:3000 product-backend-prod
 
 docker-compose up -d
 docker-compose down
+
+
+#docker swarm
+
+
+version: '3.8'
+
+services:
+  auth-backend:
+    image: auth-backend-prod:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/auth
+    networks:
+      - app-network
+    ports:
+      - "3001:3001"  # Si vous souhaitez exposer le port du conteneur
+
+  product-backend:
+    image: product-backend-prod:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/ecommerce
+    networks:
+      - app-network
+    ports:
+      - "3000:3000"
+
+  order-backend:
+    image: order-backend-prod:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/orders
+    networks:
+      - app-network
+    ports:
+      - "3002:3002"
+
+  vue-frontend:
+    image: vue-frontend-prod:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - app-network
+    ports:
+      - "80:80"
+
+  mongo:
+    image: mongo:4.4
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - app-network
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    ports:
+      - "27017:27017"
+
+networks:
+  app-network:
+    driver: overlay  # Utilisation d'un réseau overlay pour Swarm
+
+volumes:
+  mongo-data:
+    driver: local  # Volume local pour persister les données MongoDB
+
+docker swarm init
+docker stack deploy -c docker-stack.yml mon-app
