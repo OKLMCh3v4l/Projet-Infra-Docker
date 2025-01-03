@@ -92,13 +92,13 @@ else
 fi
 
 # Définir les variables du projet
-REPO_URL="<URL_DU_DÉPÔT>"  # Remplacez par l'URL de votre dépôt Git
-PROJECT_DIR="<NOM_DU_PROJET>"  # Remplacez par le nom de votre projet
+REPO_URL="https://github.com/OKLMCh3v4l/Projet-Infra-Docker.git"  # Remplacez par l'URL de votre dépôt Git
+PROJECT_DIR="Projet-Infra-Docker"  # Remplacez par le nom de votre projet
 
 # Cloner le dépôt si ce n'est pas déjà fait
 if [ ! -d "$PROJECT_DIR" ]; then
     echo_info "Clonage du dépôt depuis $REPO_URL..."
-    git clone "$REPO_URL" "$PROJECT_DIR"
+    git clone -b 'feat/Dockerfile-front-back' "$REPO_URL" "$PROJECT_DIR"
     echo_success "Dépôt cloné dans le répertoire '$PROJECT_DIR'."
 else
     echo_warning "Le répertoire '$PROJECT_DIR' existe déjà. Assurez-vous que c'est le bon dépôt."
@@ -108,6 +108,7 @@ cd "$PROJECT_DIR"
 
 # Installer les dépendances du frontend
 echo_info "Installation des dépendances du frontend..."
+pwd
 cd frontend
 npm install
 echo_success "Dépendances du frontend installées."
